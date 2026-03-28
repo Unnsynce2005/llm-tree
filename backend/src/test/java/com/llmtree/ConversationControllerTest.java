@@ -45,7 +45,7 @@ class ConversationControllerTest {
     @Test
     void createConversation_returnsCreated() throws Exception {
         UUID id = UUID.randomUUID();
-        when(treeService.createConversation(any())).thenReturn(
+        when(treeService.createConversation(any(), any())).thenReturn(
                 ConversationResponse.builder()
                         .id(id).title("Test").createdAt(Instant.now())
                         .updatedAt(Instant.now()).nodeCount(0).branchCount(1).build());
@@ -60,7 +60,7 @@ class ConversationControllerTest {
 
     @Test
     void listConversations_returnsArray() throws Exception {
-        when(treeService.listConversations()).thenReturn(List.of());
+        when(treeService.listConversations(any())).thenReturn(List.of());
 
         mvc.perform(get("/api/conversations"))
                 .andExpect(status().isOk())

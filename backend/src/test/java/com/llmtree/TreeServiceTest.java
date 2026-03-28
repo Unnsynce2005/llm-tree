@@ -47,7 +47,7 @@ class TreeServiceTest {
         var req = new CreateConversationRequest();
         req.setTitle("My chat");
 
-        ConversationResponse resp = treeService.createConversation(req);
+        ConversationResponse resp = treeService.createConversation(req, null);
 
         assertThat(resp.getId()).isEqualTo(convId);
         assertThat(resp.getTitle()).isEqualTo("Test");
@@ -64,7 +64,7 @@ class TreeServiceTest {
         req.setTitle("Chat");
         req.setSystemPrompt("You are helpful.");
 
-        treeService.createConversation(req);
+        treeService.createConversation(req, null);
 
         // Should save both the conversation and a system node
         verify(conversationRepo).save(any());
