@@ -1,6 +1,8 @@
 import type { Conversation, TreeResponse, BranchResponse, DiffResponse, ProviderInfo } from '../types';
 
-const BASE = '/api';
+const BASE = import.meta.env.VITE_API_URL
+  ? `${import.meta.env.VITE_API_URL}/api`
+  : '/api';
 
 async function request<T>(path: string, options?: RequestInit): Promise<T> {
   const res = await fetch(`${BASE}${path}`, {
@@ -53,7 +55,7 @@ export const api = {
     return request<ProviderInfo[]>('/providers');
   },
 
-  // Fork (REST-only, no streaming — client then triggers WS for LLM response)
+  // Fork
   fork(parentId: string, content: string) {
     return request<unknown>(`/nodes/${parentId}/fork`, {
       method: 'POST',

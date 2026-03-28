@@ -8,8 +8,9 @@ on:
 
 jobs:
   backend:
-    name: Backend - Build and Test
+    name: Backend — Build & Test
     runs-on: ubuntu-latest
+
     services:
       postgres:
         image: postgres:16-alpine
@@ -24,18 +25,22 @@ jobs:
           --health-interval 5s
           --health-timeout 3s
           --health-retries 5
+
     defaults:
       run:
         working-directory: backend
+
     steps:
       - uses: actions/checkout@v4
+
       - name: Set up JDK 21
         uses: actions/setup-java@v4
         with:
-          java-version: 21
-          distribution: temurin
-          cache: maven
-      - name: Build and Test
+          java-version: '21'
+          distribution: 'temurin'
+          cache: 'maven'
+
+      - name: Build & Test
         env:
           SPRING_DATASOURCE_URL: jdbc:postgresql://localhost:5432/llm_tree
           SPRING_DATASOURCE_USERNAME: llm_tree
@@ -44,22 +49,28 @@ jobs:
         run: mvn verify -B
 
   frontend:
-    name: Frontend - Build and Typecheck
+    name: Frontend — Build & Typecheck
     runs-on: ubuntu-latest
+
     defaults:
       run:
         working-directory: frontend
+
     steps:
       - uses: actions/checkout@v4
+
       - name: Set up Node 20
         uses: actions/setup-node@v4
         with:
-          node-version: 20
-          cache: npm
+          node-version: '20'
+          cache: 'npm'
           cache-dependency-path: frontend/package-lock.json
-      - name: Install
+
+      - name: Install dependencies
         run: npm ci || npm install
+
       - name: Typecheck
         run: npx tsc --noEmit
+
       - name: Build
         run: npm run build

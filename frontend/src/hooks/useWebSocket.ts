@@ -13,14 +13,25 @@ export function useWebSocket(onChunk: (chunk: StreamChunk) => void) {
     if (wsRef.current?.readyState === WebSocket.OPEN) return;
 
     setStatus('connecting');
-    const protocol = window.location.protocol === 'https:' ? 'wss:' : 'ws:';
-    const host = window.location.host;
-    const ws = new WebSocket(`${protocol}//${host}/ws/chat`);
+
+    let wsUrl: string;
+    const apiUrl = import.meta.env.VITE_API_URL;
+    if (apiUrl) {
+      // Production: derive WS URL from API URL
+      const url = new URL(apiUrl);
+      const wsProtocol = url.protocol === 'https:' ? 'wss:' : 'ws:';
+      wsUrl = `${wsProtocol}//${url.host}/ws/chat`;
+    } else {
+      // Dev: connect through Vite proxy
+      const protocol = window.location.protocol === 'https:' ? 'wss:' : 'ws:';
+      wsUrl = `${protocol}//${window.location.host}/ws/chat`;
+    }
+
+    const ws = new WebSocket(wsUrl);
 
     ws.onopen = () => setStatus('connected');
     ws.onclose = () => {
       setStatus('disconnected');
-      // Auto-reconnect after 2s
       setTimeout(() => connect(), 2000);
     };
     ws.onerror = () => ws.close();
