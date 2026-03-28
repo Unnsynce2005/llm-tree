@@ -21,6 +21,9 @@ public class Conversation {
 
     private String title;
 
+    @Column(name = "owner_id")
+    private String ownerId;
+
     @CreationTimestamp
     @Column(name = "created_at", nullable = false, updatable = false)
     private Instant createdAt;

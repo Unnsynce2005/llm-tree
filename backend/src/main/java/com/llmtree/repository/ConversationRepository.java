@@ -11,6 +11,7 @@ import java.util.UUID;
 @Repository
 public interface ConversationRepository extends JpaRepository<Conversation, UUID> {
 
+    List<Conversation> findAllByOwnerIdOrderByUpdatedAtDesc(String ownerId);
     List<Conversation> findAllByOrderByUpdatedAtDesc();
 
     @Query("SELECT COUNT(n) FROM Node n WHERE n.conversationId = :conversationId")

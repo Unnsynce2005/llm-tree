@@ -8,6 +8,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
@@ -31,14 +32,16 @@ public class ConversationController {
 
     @PostMapping("/conversations")
     public ResponseEntity<ConversationResponse> createConversation(
+            @RequestHeader(value = "X-Owner-Id", required = false) String ownerId,
             @RequestBody(required = false) CreateConversationRequest req) {
         if (req == null) req = new CreateConversationRequest();
-        return ResponseEntity.ok(treeService.createConversation(req));
+        return ResponseEntity.ok(treeService.createConversation(req, ownerId));
     }
 
     @GetMapping("/conversations")
-    public List<ConversationResponse> listConversations() {
-        return treeService.listConversations();
+    public List<ConversationResponse> listConversations(
+            @RequestHeader(value = "X-Owner-Id", required = false) String ownerId) {
+        return treeService.listConversations(ownerId);
     }
 
     @GetMapping("/conversations/{id}")

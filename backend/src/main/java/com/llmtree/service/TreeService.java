@@ -22,9 +22,10 @@ public class TreeService {
     private final NodeRepository nodeRepo;
 
     @Transactional
-    public ConversationResponse createConversation(CreateConversationRequest req) {
+    public ConversationResponse createConversation(CreateConversationRequest req, String ownerId) {
         Conversation conv = Conversation.builder()
                 .title(req.getTitle() != null ? req.getTitle() : "New conversation")
+                .ownerId(ownerId)
                 .build();
         conv = conversationRepo.save(conv);
 
@@ -42,8 +43,9 @@ public class TreeService {
         return toConversationResponse(conv);
     }
 
-    public List<ConversationResponse> listConversations() {
-        return conversationRepo.findAllByOrderByUpdatedAtDesc().stream()
+    public List<ConversationResponse> listConversations(String ownerId) {
+        var convos = (ownerId != null && !ownerId.isBlank()) ? conversationRepo.findAllByOwnerIdOrderByUpdatedAtDesc(ownerId) : conversationRepo.findAllByOrderByUpdatedAtDesc();
+        return convos.stream()
                 .map(this::toConversationResponse)
                 .toList();
     }
