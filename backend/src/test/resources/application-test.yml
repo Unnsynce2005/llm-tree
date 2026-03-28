@@ -1,0 +1,28 @@
+spring:
+  datasource:
+    url: ${SPRING_DATASOURCE_URL:jdbc:postgresql://localhost:5432/llm_tree}
+    username: ${SPRING_DATASOURCE_USERNAME:llm_tree}
+    password: ${SPRING_DATASOURCE_PASSWORD:llm_tree_dev}
+
+  jpa:
+    hibernate:
+      ddl-auto: validate
+    open-in-view: false
+
+  flyway:
+    enabled: true
+
+llm:
+  anthropic:
+    api-key: test-key
+    default-model: claude-sonnet-4-20250514
+  openai:
+    api-key: test-key
+    default-model: gpt-4o
+  gemini:
+    api-key: test-key
+    default-model: gemini-2.0-flash
+
+logging:
+  level:
+    com.llmtree: WARN
